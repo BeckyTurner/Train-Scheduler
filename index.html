@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Train Scheduler</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.js"
+        integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-database.js"></script>
+</head>
+
+<body style="background-color: black">
+    <!-- jumbotron -->
+    <div class="container" style="background-color: black; color: magenta">
+        <div class="jumbotron" style="background-color: magenta; color: black">
+            <h1 class="text-center">Train Schedule</h1>
+            <h3 class="text-center">Departure and Arrival Times</h3>
+        </div>
+        <!-- Trains in DB -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 p-4" style="background-color: magenta; color: black">
+                    <div class="card-body">
+                        <h3 class="card-title">Scheduled Trains</h3>
+                        <table class="table table-sm table-hover" id='train-table'>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Train Name</th>
+                                    <th scope="col">Destination</th>
+                                    <th scope="col">First Train Time</th>
+                                    <th scope="col">Frequency</th>
+                                    <th scope="col">Next Train Arrival</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Adding a new train -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 p-4" style="background-color: magenta; color: black">
+                    <div class="card-body">
+                        <h3 class="card-title">Add a Train</h3>
+                        <form>
+                            <div class="form-group row">
+                                <label for="train-name-input">Train Name</label>
+                                <input class="form-control" id="train-name-input"
+                                    style="background-color: black; color: white" placeholder="Train Name">
+                            </div>
+                            <div class="form-group row">
+                                <label for="destination">Destination</label>
+                                <input class="form-control" id="destination-input"
+                                    style="background-color: black; color: white" placeholder="Destination">
+                            </div>
+                            <div class="form-group row">
+                                <label for="firstTrainTime">First Train Time HH:MM (In military time)</label>
+                                <input class="form-control" id="first-train-time-input"
+                                    style="background-color: black; color: white" placeholder="HH:MM">
+                            </div>
+                            <div class="form-group row">
+                                <label for="frequency">Frequency (minutes)</label>
+                                <input class="form-control" id="frequency-input"
+                                    style="background-color: black; color: white" placeholder="Frequency">
+                            </div>
+                            <button type="button" class="btn btn-primary float-left" id="add-train"
+                                style="background-color: black; color: magenta">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="assets/javascript/app.js"></script>
+
+
+</body>
+
+</html>
