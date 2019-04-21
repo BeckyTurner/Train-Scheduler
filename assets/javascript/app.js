@@ -12,22 +12,40 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-$("#add-train").on("click", function(event) {
+$("#add-train").on("click", function (event) {
+
     event.preventDefault();
 
-    // gets user input
-    var trainName = $("#train-name-input").val();
-    var destination = $("#destination-input").val();
-    var firstTrainTime = $("#first-train-time-input").val();
-    var frequency = $("#frequency-input").val();
+    // validation for input fields
+    if ($("#train-name-input").val() === "" ||
+        $("#train-name-input").val() === "" ||
+        $("#train-name-input").val() === "" ||
+        $("#train-name-input").val() === "") {
+        alert("Please fill out all input fields!");
+    } else {
+        // gets user input
+        var trainName = $("#train-name-input").val();
+        var destination = $("#destination-input").val();
+        var firstTrainTime = $("#first-train-time-input").val();
+        var frequency = $("#frequency-input").val();
 
-    // creats new var for holding all new train info
-    var newTrain = {
-        "trainName": trainName,
-        "destination": destination,
-        "firstTrainTime": firstTrainTime,
-        "frequency": frequency
-    };
-    console.log(newTrain);
-    database.ref("/").push(newTrain);
+        // creates new var for holding all new train info
+        database.ref().push({
+            trainName: trainName,
+            destination: destination,
+            firstTrainTime: firstTrainTime,
+            frequency: frequency
+        });
+
+        $("#train-name-input").val("");
+        $("#destination-input").val("");
+        $("#first-train-time-input").val("");
+        $("#frequency-input").val("");
+    }
+
+
+});
+
+database.ref().on("child_added", function (childSnapshot) {
+    console.log("Snap shot", childSnapshot.val());
 })
