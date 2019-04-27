@@ -40,8 +40,6 @@ $("#add-train").on("click", function (event) {
         // clear input fields
         $(".form-control").val("");
     }
-
-
 });
 
 database.ref().on("child_added", function (childSnapshot) {
@@ -53,22 +51,23 @@ database.ref().on("child_added", function (childSnapshot) {
     var firstTrainTime = childSnapshot.val().firstTrainTime;
     var frequency = childSnapshot.val().frequency;
 
-    //calulates time to next train in minutes
-    //caputure current time
     var currentTime = moment();
     firstTrainTime = moment(firstTrainTime, "HH mm");
 
-    //if current time is before train time, find the difference in minutes
-    var firstTrainTimeConverted = moment(childSnapshot.val().firstTrainTime, "hh:mm").subtract(1, "years");
-    var timeDifference = moment().diff(moment(firstTrainTimeConverted), "minutes");
-    var timeRemaining = timeDifference % childSnapshot.val().frequency;
-    var minutesToArrival = childSnapshot.val().frequency- timeRemaining;
-    var nextTrain = moment().add(minutesToArrival, "minutes");
-    
-
-
+    if (currentTime < firstTrainTime) {
+        var arrivalTime = moment(firstTrainTime).format("HH:mm");
+        var nextTrain = moment.duration(firstTrainTime.diff(currentTime));
+        var nextTrain = Math.round(nextTrain.asMinutes());
+    } else {
+        var nextTrain = moment.duration(currentTime.diff(firstTrainTime));
+        var nextTrain= Math.round(nextTrain.asMinutes());
+        var nextTrain = frequency - (nextTrain%frequency);
+        var arrivalTime = moment().add(nextTrain, "minutes").format("HH:mm");
+    }
+    //append new table rows when a new train is submitted to the database
     var newTableRow = "<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
-        firstTrainTime + "</td><td>" + frequency + "</td><td>" + nextTrain + "</td><td>" + minutesToArrival + "</td></tr>";
+        firstTrainTime + "</td><td>" + frequency + "</td><td>" + arrivalTime + "</td><td>" +
+        nextTrain + "</td></tr>";
     $("#train-table").append(newTableRow);
 
-})
+});
