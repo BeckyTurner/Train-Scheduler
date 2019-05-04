@@ -12,6 +12,7 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
+//getting the info from the form submit
 $("#add-train").on("click", function (event) {
 
     event.preventDefault();
@@ -51,23 +52,32 @@ database.ref().on("child_added", function (childSnapshot) {
     var firstTrainTime = childSnapshot.val().firstTrainTime;
     var frequency = childSnapshot.val().frequency;
 
+    //calculate next train arrivals in minutes--I can't get the arrival times to display and function properly
+    //get current time
     var currentTime = moment();
-    firstTrainTime = moment(firstTrainTime, "HH mm");
 
-    if (currentTime < firstTrainTime) {
-        var arrivalTime = moment(firstTrainTime).format("HH:mm");
-        var nextTrain = moment.duration(firstTrainTime.diff(currentTime));
-        var nextTrain = Math.round(nextTrain.asMinutes());
-    } else {
-        var nextTrain = moment.duration(currentTime.diff(firstTrainTime));
-        var nextTrain= Math.round(nextTrain.asMinutes());
-        var nextTrain = frequency - (nextTrain%frequency);
-        var arrivalTime = moment().add(nextTrain, "minutes").format("HH:mm");
-    }
+    //converts the time to make sure it comes earlier than current time
+    var firstTrainTimeConverted = moment(firstTrainTime, "hh:mm").subtract(1, "years");
+
+    //difference between times
+    var timeDifference = currentTime.diff(moment(firstTrainTimeConverted), "minutes");
+
+    //remainding time
+    var remaindingTime = timeDifference % frequency;
+
+    //minutes until next train
+    var minutesAway = frequency - remaindingTime;
+
+    //var to figure out when next train arriecs
+    var nextTrain = currentTime.add(minutesAway, "minutes");
+
+    //calucaulting arrival time
+    var arrivalTime = moment(nextTrain).format("HH:mm");
+
     //append new table rows when a new train is submitted to the database
     var newTableRow = "<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
         firstTrainTime + "</td><td>" + frequency + "</td><td>" + arrivalTime + "</td><td>" +
-        nextTrain + "</td></tr>";
+        minutesAway + "</td></tr>";
     $("#train-table").append(newTableRow);
 
 });
